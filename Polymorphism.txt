@@ -1,0 +1,709 @@
+====================================================================================
+				Polymorphism
+			================================
+poly means many
+morphs means forms(behaviour)
+Polymorphisn means Manyforms
+
+Ex---
+=====
+======
+
++ operator acts as concatination   and airthmetic addition
+
+* operator acts as multiplication and repetition operator
+
+
+=========================================================
+=========================================================
+Related to polymorphism the following 3 topics................................
+
+============
+1..Duck typing 
+
+2..Overloading
+	1-Operator Overloading
+	2-Method Overloading
+	3-Constructor Overloading
+
+3..Overriding
+	1-Method Overriding 
+	2-Constructor Overring
+
+
+====================================================================================
+====================================================================================
+
+
+1..Duck typing 
+=============
+================
+
+duck typing is a feature of a type system where the semantcis of a class is determined 
+
+by his ability to responed to some message(method or property) 
+
+in python we can not specify the type explicitly , based on provided value at runtime the type will
+be considered automatically , hence python is considered Dynamically Typed programming language
+
+def f1(obj):
+	obj.talk()
+
+what is the type of obj ? we acnnot decide at beggining , at runtime we can pass any type, then
+how we can decide the type
+
+at runtime if it walks a duck and talks like a duck ,it must be duck 
+
+ex----
+======
+===========  
+
+class Ducks:
+    def talks(self):
+        print("Quack Quack Quack.................")
+
+class Dogs:
+    def talks(self):
+        print("Barks Barks Barks.................")
+
+
+class Cats:
+    def talks(self):
+        print("Meww Meww Meww....................")
+
+class Humans:
+    def talks(self):
+        print("Aur Bta Bhai.......................")
+
+def f1(obj):
+    obj.talks()
+l=[Ducks(),Dogs(),Cats(),Humans()]
+for obj in l:
+    f1(obj)
+
+Output-
+========
+==========
+Quack Quack Quack.................
+Barks Barks Barks.................
+Meww Meww Meww....................
+Aur Bta Bhai.......................
+
+
+
+================================================================================
+===============================================================================
+
+the problem in this apporach is if obj does not contain talks() method then we will get AttributeError
+
+
+class Ducks:
+    def talks(self):
+        print("Quack Quack Quack.................")
+
+class Dogs:
+    def barks(self):
+        print("Barks Barks Barks.................")
+
+def f1(obj):
+    obj.talks()
+d=Ducks()
+f1(d)
+d=Dogs()
+f1(d)
+
+Output
+
+Quack Quack Quack.................
+Traceback (most recent call last):
+  File "C:\Users\Mukesh Yadav.DELL\AppData\Local\Programs\Python\Python37\Excecise 3.py", line 14, in <module>
+    f1(d)
+  File "C:\Users\Mukesh Yadav.DELL\AppData\Local\Programs\Python\Python37\Excecise 3.py", line 10, in f1
+    obj.talks()
+AttributeError: 'Dogs' object has no attribute 'talks'
+
+===================================================================================
+===================================================================================
+
+But we can solve this problem by using hasattr() function
+
+hasattr(obj,'attributename') 
+
+attributename can be method name or variable name
+ex--
+=====
+=======
+
+class Ducks:
+    def talks(self):
+        print("Quack Quack Quack.................")
+
+class Dogs:
+    def barks(self):
+        print("Barks Barks Barks.................")
+
+def f1(obj):
+    if hasattr(obj,'talks'):
+        obj.talks()
+    elif hasattr(obj,'barks'):
+        obj.barks()
+   
+d=Ducks()
+f1(d)
+d=Dogs()
+f1(d)
+
+
+Output
+==========
+Quack Quack Quack.................
+Barks Barks Barks...................
+
+===================================================================================
+===================================================================================
+
+				Overloading
+			===========================
+			===========================
+
+we can use same operator or methods for different purposes
+
+Ex-1
+
++ operator can we use concatination and airthmetic operations
+>>>print("Mukesh+Yadav")
+>>>print(10+20)
+
+Ex-2
+
+we can use deposit() method to deposit cash, checque,DD
+>>>deposit(cash)
+>>>deposit(checque)
+>>>deposit(DD)
+
+=========================================================
+============================================================
+there are 3 types overloading
+==========================
+
+1-Operator Overloading
+=====================
+
+the assignment of more than one function to a particular operator
+
+Ex-1
+=====
+=======
+
++ operator can we use concatination and airthmetic operations
+>>>print("Mukesh+Yadav")
+>>>print(10+20)
+
+Ex-2
+=====
+=======
+
+* operator is used for multplication and repeatation operator
+
+>>>print(10*3)
+>>>print("Mukesh*3")
+
+
+==================================================================================
+==================================================================================
+
+>>> class Book:
+	def __init__(self,pages):
+		self.pages=pages
+
+		
+>>> b1=Book(100)
+>>> b2=Book(200)
+>>> print(b1+b2)
+Traceback (most recent call last):
+  File "<pyshell#99>", line 1, in <module>
+    print(b1+b2)
+TypeError: unsupported operand type(s) for +: 'Book' and 'Book'
+
+
+Note-we can oveload + operator to work with Book object also , 
+i.e Python supports Operator overloading
+
+For every Operator Magic operator are availble , to overload any operator we have to override that 
+maethod in our class 
+internally + operator is implemented  by using __add__() method.This method is called magic
+method for + operator .We have to override this method in our class 
+
+Ex-
+
+>>> class Book:
+	def __init__(self,pages):
+		self.pages=pages
+	def __add__(self,other):
+		return self.pages+other.pages
+
+	
+>>> b1=Book(100)
+>>> b2=Book(200)
+>>> print(b1+b2)
+300
+
+===================================================================================
+===================================================================================
+
+following list of operators and crroesponding magic operator
+
++	-->	__add__(self,other)
+
+-	-->	__sub__(self,other)
+
+*	-->	__mul__(self,other)
+
+/	-->	__div__(self,other)
+
+//	-->	__floordiv__(self,other)
+
+%	-->	__mod__(self,other)
+
+**	-->	__pow__(self,other)
+
++=	-->	__iadd__(self,other)
+
+-=	-->	__isub__(self,other)
+
+*=	-->	__imul__(self,other)
+
+/=	-->	__idiv__(self,other)
+
+//=	-->	__ifloordiv__(self,other)
+
+%=	-->	__imod__(self,other)
+
+**=	-->	__ipow__(self,other)
+
+<	-->	__lt__(self,other)
+
+<=	-->	__le__(self,other)
+
+>	-->	__gt__(self,other)
+
+>=	-->	__ge__(self,other)
+
+==	-->	__eq__(self,other)
+
+!=	-->	__ne__(self,other)
+
+
+===================================================
+Ex---
+====
+=========
+
+class Student:
+    def __init__(self,name,marks):
+        self.name=name
+        self.marks=marks        
+    def __gt__(self,other):
+        return self.marks>other.marks
+    def __le__(self,other):
+        return self.marks<=other.marks
+
+s1=Student("Mukesh",100)
+s2=Student("Amresh",200)
+print("s1>s2=",s1>s2)
+print("s1<s2",s1<s2)
+print("s1<=s2",s1<=s2)
+print("s1>=s2",s1>=s2)
+
+
+output
+
+s1>s2= False
+s1<s2 True
+s1<=s2 True
+s1>=s2 False
+
+===================================================================================
+===================================================================================
+
+Program to overload multiplication operator to work on Employee Objects
+
+=====================
+class Employee:
+    def __init__(self,name,salary):
+        self.name=name
+        self.salary=salary
+    def __mul__(self,other):
+        return self.salary*other.days
+
+class TimeSheet:
+    def __init__(self,name,days):
+        self.name=name
+        self.days=days
+e=Employee("Mukesh",1000)
+t=TimeSheet("Mukesh",25)
+print("This Month Salary :",e*t)
+
+
+    
+Output
+==========
+==============
+This Month Salary : 25000
+
+===================================================================================
+===================================================================================
+
+2--Method(function) Overloading
+====================
+========================
+the assignment of more than one behaviour to a particular function is known as function(method)
+overloading
+
+ie. if two methods having the same name but different types of arguments then those methods are 
+said to be overloaded methods 
+
+Ex--
+====
+=======
+m1(int a)
+m1(double b)
+
+But in python method overloading is not possible 
+
+if we are trying to declare multiple methods with same and different number of arguments then python
+will always consider only last method
+
+===================================================================================
+===================================================================================
+
+Example--------
+============
+===============
+
+>>> class Test:
+	def m1(self):
+		print("No arguments")
+	def m2(self,a):
+		print("One Agruments")
+	def m3(self,a,b):
+		print("Two Arguments")
+
+		
+>>> t=Test()
+>>> t.m1()
+No arguments
+>>> t.m2(10)
+One Agruments
+>>> t.m3(10,20)
+Two Arguments
+
+Note- In above program python will consider only last methods
+
+===================================================================================
+===================================================================================
+
+How can we handle overloaded method requirements in python 
+
+===============
+most of times , if methods with variable number of arguments required then we can handle with
+default arguments or with variable number of arguement methods
+
+===========
+
+>>> class Test:
+	def sum(self,a=None,b=None,c=None):
+		if a!=None and b!=None and c!=None:
+			print("The Sum of 3 Numbers :",a+b+c)
+		elif a!=None and b!=None:
+			print("The Sum of 2 Numbers :",a+b)
+		else:
+			print("Please Provide 2 or 3 Arguments")
+
+			
+>>> t=Test()
+>>> t.sum(10,20)
+The Sum of 2 Numbers : 30
+>>> t.sum(10,20,30)
+The Sum of 3 Numbers : 60
+>>> t.sum(10)
+Please Provide 2 or 3 Arguments
+
+===================================================================================
+Demo Program with Variable Number of Arguments
+=============================================
+=================================================
+=====================================================
+
+>>> class Test:
+	def sum(self,*a):
+		total=0
+		for x in a:
+			total=total+x
+		print("The Sum :",total)
+
+		
+>>> t=Test()
+>>> t.sum(10,20)
+The Sum : 30
+>>> t.sum(10,20,30)
+The Sum : 60
+>>> t.sum(10)
+The Sum : 10
+>>> t.sum()
+The Sum : 0
+
+
+===================================================================================
+===================================================================================
+
+3-Constructor Overloading
+=======================
+============================
+
+constructor laoding is not possible in python 
+
+if we define multiple constructors then the last constructor will be considered 
+
+=========================
+==============================
+>>> class Test:
+	def __init__(self):
+		print("No Arguments Constructor ")
+	def __init__(self,a):
+		print("One Arguments Constructor ")
+	def __init__(self,a,b):
+		print("Two Arguments Constructor ")
+
+		
+>>> t1=Test()
+Traceback (most recent call last):
+  File "<pyshell#66>", line 1, in <module>
+    t1=Test()
+TypeError: __init__() missing 2 required positional arguments: 'a' and 'b'
+>>> t2=Test(10)
+Traceback (most recent call last):
+  File "<pyshell#67>", line 1, in <module>
+    t2=Test(10)
+TypeError: __init__() missing 1 required positional argument: 'b'
+>>> t3=Test(10,20)
+Two Arguments Constructor 
+
+Note - In above program only last constructor is working 
+=========================================
+================================================
+
+but based on our requirements we can declare constructor with default arguments and variables 
+number of arguments 
+
+====================
+Constructor with Default Argueements
+
+=====================================
+=========================================
+
+>>> class Test:
+	def __init__(self,a=None,b=None,c=None):
+		print("Constructor with 0|1|2|3 number of arguments")
+
+		
+>>> t=Test()
+Constructor with 0|1|2|3 number of arguments
+>>> t2=Test(10)
+Constructor with 0|1|2|3 number of arguments
+>>> t3=Test(10,20)
+Constructor with 0|1|2|3 number of arguments
+>>> t4=Test(10,20,30)
+Constructor with 0|1|2|3 number of arguments
+>>> t5=Test(10,20,30,40)
+Traceback (most recent call last):
+  File "<pyshell#80>", line 1, in <module>
+    t5=Test(10,20,30,40)
+TypeError: __init__() takes from 1 to 4 positional arguments but 5 were given
+
+
+
+===================================================================================
+===================================================================================
+
+Constructor with variable number of argements
+=========================================
+=============================================
+==================================================
+
+>>> class Test:
+	def __init__(self,*a):
+		print("constructor with number of arguments................")
+
+		
+>>> t1=Test()
+constructor with number of arguments................
+>>> t2=Test(10)
+constructor with number of arguments................
+>>> t3=Test(10,20)
+constructor with number of arguments................
+>>> t4=Test(10,20,30)
+constructor with number of arguments................
+>>> t5=Test(10,20,30,40)
+constructor with number of arguments................
+
+
+===============================================
+========================================================================
+===================================================================================
+
+				Method(Function) Overriding
+			=======================================
+		======================================================
+
+
+method(function) overriding is process of rewrtting Super class function in Sub class  
+
+ie. whatever methods availble in the parent class are by default availble to the child class through
+inheritance 
+if the child class not satisfied with parent class implementation then child class is allowed to 
+redefine that method inthe child class based on its requirement , this concept is called overriding 
+Overriding concept applicable for both methods and constructors
+
+Ex-
+====
+=======
+
+>>> class P:
+	def property(self):
+		print("Gold+Land+Cash+Power")
+	def marry(self):
+		print("Appalamma")
+
+		
+>>> class C(P):
+	def marry(self):
+		print("Kaitreena Kaif")
+
+		
+>>> c=C( )
+>>> c.property( )
+Gold+Land+Cash+Power
+>>> c.marry( )
+Kaitreena Kaif
+
+
+========================================
+=================================================
+===============================================================
+
+from overriding method of child class , we can call parent class method also by using super() method
+
+===============
+=======================
+>>> class P:
+	def property(self):
+		print("Gold+Land+Cash+Power")
+	def marry(self):
+		print("Appalamma")
+
+		
+>>> class C(P):
+	def marry(self):
+		super( ).marry( )
+		print("Kaitreena Kaif")
+
+		
+>>> c=C( )
+>>> c.property( )
+Gold+Land+Cash+Power
+>>> c.marry( )
+Appalamma
+Kaitreena Kaif
+
+
+===================================================================================
+===================================================================================
+
+Demo Program of constructor  overriding
+
+====================================
+=========================================
+
+>>> class P:
+	def __init__(self):
+		print("Parent Constructor ")
+
+		
+>>> class C(P):
+	def __init__(self):
+		print("Child Constructor ")
+
+		
+>>> c=C()
+Child Constructor 
+
+===================
+In above example ,if child class does not caontain constructor then parent class constructor will
+be executed
+
+From child class constructor we can call parent constructor by using super() method
+
+Ex-
+======
+=========
+
+>>> class P:
+	def __init__(self):
+		print("Parent Constructor ")
+
+		
+>>> class C(P):
+	def no(self):
+		print("Child Constructor ")
+
+		
+>>> c=C( )
+Parent Constructor 
+
+===========================================================================
+==============================================================================
+
+Demo Program to call parent class constuctor by using super() method
+============================================================
+===============================================================
+===================================================================
+
+Ex-
+=======
+=========
+
+>>> class Person:
+	def __init__(self,name,age):
+		self.name=name
+		self.age=age
+
+		
+>>> class Employee(Person):
+	def __init__(self,name,age,eno,esal):
+		super().__init__(name,age)
+		self.eno=eno
+		self.esal=esal
+	def display(self):
+		print("Employee Name ::",self.name)
+		print("Employee Age ::",self.age)
+		print("Employee Number ::",self.eno)
+		print("Employee Salary ::",self.esal)
+
+		
+>>> e1=Employee("Mukesh",20,101,100000)
+>>> e1.display()
+
+Employee Name :: Mukesh
+Employee Age :: 20
+Employee Number :: 101
+Employee Salary :: 100000
+
+
+>>> e1=Employee("Amresh",30,102,200000)
+>>> e1.display()
+
+Employee Name :: Amresh
+Employee Age :: 30
+Employee Number :: 102
+Employee Salary :: 200000
